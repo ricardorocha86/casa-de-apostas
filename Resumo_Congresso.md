@@ -1,17 +1,9 @@
-## Títulos para Apresentação em Congresso:
+## Título
 
-**Opção Original (Referência):**
-*   Decifrando a Banca: Um Simulador Interativo para Revelar a Dinâmica Oculta das Casas de Apostas Esportivas
+Quebrando a Banca: Um Simulador Interativo para Revelar a Dinâmica Oculta das Casas de Apostas Esportivas 
 
-**Alternativas Sugeridas:**
-1.  A Banca Sob Demanda: Simulando o Universo das Apostas Esportivas
-2.  Odds & Algoritmos: Uma Simulação Interativa de Casas de Apostas
-3.  Por Dentro da Banca: Revelando Mecanismos de Apostas com Simulação
-4.  Simulador de Apostas: Decifrando Riscos e Lucros em Jogo
-5.  Apostas em Jogo: Dinâmica de Risco Revelada por Simulação Interativa
+## Resumo 
 
-## Resumo Condensado para Congresso (Aprox. 300 palavras):
+Este trabalho apresenta um simulador interativo avançado, desenvolvido em Python com Streamlit, para desmistificar a complexa dinâmica interna das casas de apostas esportivas. O objetivo central é fornecer uma ferramenta educacional e analítica que permita investigar como variáveis chave – como a margem da casa, número de jogos, e diferentes perfis de apostadores (conservador, moderado, arriscado) – impactam a lucratividade da casa e a trajetória financeira dos apostadores. A metodologia envolve a simulação de rodadas de apostas em jogos de futebol, onde probabilidades de resultados são geradas aleatoriamente e as odds são calculadas pela "casa" incorporando uma margem de lucro configurável. Apostadores virtuais, com perfis de risco distintos, tomam decisões sobre apostar, a quantidade de apostas e o valor. A plataforma rastreia e exibe, através de um dashboard interativo, métricas financeiras detalhadas (faturamento, pagamentos, lucro), estatísticas de usuários (saldos, lucratividade, falência) e permite a exploração histórica completa. Com isso, é possível analisar o impacto da margem da casa nas odds e nos lucros, a dinâmica de diferentes perfis de risco e suas consequências financeiras, a relação entre volatilidade e lucratividade da casa, os efeitos de longo prazo sobre o ecossistema de apostas e a sensibilidade do sistema a diversos parâmetros configuráveis. O simulador permite gerar insights sobre a sustentabilidade da casa e as probabilidades de sucesso para apostadores, fomentando uma compreensão crítica e informada do setor.
 
-Este trabalho apresenta um simulador interativo avançado, desenvolvido em Python com Streamlit, para desmistificar a complexa dinâmica interna das casas de apostas esportivas. O objetivo central é fornecer uma ferramenta educacional e analítica que permita investigar como variáveis chave – como a margem da casa, número de jogos, e diferentes perfis de apostadores (conservador, moderado, arriscado) – impactam a lucratividade da casa e a trajetória financeira dos apostadores. A metodologia envolve a simulação de rodadas de apostas em jogos de futebol, onde probabilidades de resultados são geradas aleatoriamente e as odds são calculadas pela "casa" incorporando uma margem de lucro configurável. Apostadores virtuais, com perfis de risco distintos, tomam decisões sobre apostar, a quantidade de apostas (via Distribuição de Poisson Truncada) e o valor (percentual do saldo). A plataforma rastreia e exibe, através de um dashboard interativo, métricas financeiras detalhadas (faturamento, pagamentos, lucro/GGR), estatísticas de usuários (saldos, lucratividade, falência) e permite a exploração histórica completa. Com isso, é possível analisar o impacto da margem da casa nas odds e nos lucros, a dinâmica de diferentes perfis de risco e suas consequências financeiras, a relação entre volatilidade e lucratividade da casa, os efeitos de longo prazo sobre o ecossistema de apostas e a sensibilidade do sistema a diversos parâmetros configuráveis. O simulador elucida mecanismos financeiros e probabilísticos cruciais, permitindo gerar insights sobre a sustentabilidade da casa e as probabilidades de sucesso para apostadores, fomentando uma compreensão crítica e informada do setor.
-
-**Palavras-chave:** Simulação de Apostas, Modelagem Probabilística, Streamlit, Análise de Risco, Comportamento do Apostador, Jogos de Azar, Finanças de Apostas. 
+**Palavras-chave:** Simulação de Apostas, Modelagem Probabilística, Análise de Risco, Comportamento do Apostador, Jogos de Azar, Streamlit, Python. 
