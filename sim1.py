@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import random
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 from faker import Faker # Adicionado
 
 # --- Constantes e Configurações Iniciais ---
@@ -772,7 +773,6 @@ else:
     else:
         st.write("Nenhuma rodada foi realizada ainda. Execute pelo menos uma rodada para visualizar os dados.")
             
-    # with st.expander("👤 Detalhes dos Usuários"): # REMOVIDO O EXPANDER
     st.markdown("--- ") # Adicionando um separador
     st.header("👤 Detalhes dos Usuários") # Adicionando um header para a seção
     if st.session_state.usuarios:
@@ -810,7 +810,6 @@ else:
                             help="Ganhos - Perdas.")
                      }, use_container_width=True, height=400, hide_index=True)
             
-    # with st.expander("📊 Histórico Individual do Usuário"): # REMOVIDO O EXPANDER
     st.markdown("--- ") # Adicionando um separador
     st.header("📊 Histórico Individual do Usuário") # Adicionando um header para a seção
     if st.session_state.usuarios and st.session_state.historico_apostas:
@@ -892,24 +891,95 @@ else:
                 if len(rodadas_usuario) > 1:
                     st.markdown("### 📈 Saldo por Rodada")
                     
-                    # Calcular saldo ao final de cada rodada
+                    # Calcular saldo ao final de cada rodada para TODOS os usuários
                     saldo_inicial_ref = getattr(st.session_state, 'saldo_inicial', 100.0)
-                    saldo_atual = saldo_inicial_ref
-                    dados_saldo = []
                     
-                    for rodada in rodadas_usuario:
-                        # Calcular resultado da rodada
-                        apostas_rodada = [a for a in apostas_usuario if a['rodada'] == rodada]
-                        resultado_rodada = sum(a['valor_ganho'] - a['valor_apostado'] for a in apostas_rodada)
-                        saldo_atual += resultado_rodada
+                    # Coletar todas as rodadas que existem
+                    todas_rodadas = set()
+                    for rodada_apostas in st.session_state.historico_apostas:
+                        todas_rodadas.add(rodada_apostas["rodada"])
+                    todas_rodadas = sorted(list(todas_rodadas))
+                    
+                    # Criar DataFrame com saldo de todos os usuários por rodada
+                    dados_todos_usuarios = {}
+                    dados_usuario_selecionado = {}
+                    
+                    # Incluir rodada 0 (inicial) para mostrar o ponto de partida
+                    rodadas_para_grafico = [0] + todas_rodadas
+                    
+                    for usuario in st.session_state.usuarios:
+                        # Coletar apostas deste usuário
+                        apostas_user = []
+                        for rodada_apostas in st.session_state.historico_apostas:
+                            for aposta in rodada_apostas["apostas"]:
+                                if aposta["id_usuario"] == usuario['id']:
+                                    aposta_com_rodada = aposta.copy()
+                                    aposta_com_rodada["rodada"] = rodada_apostas["rodada"]
+                                    apostas_user.append(aposta_com_rodada)
                         
-                        dados_saldo.append({
-                            "Rodada": rodada,
-                            "Saldo": saldo_atual
-                        })
+                        # Calcular saldo por rodada para este usuário
+                        saldo_atual = saldo_inicial_ref
+                        dados_saldo_user = [saldo_inicial_ref]  # Começar com saldo inicial
+                        
+                        for rodada in todas_rodadas:
+                            # Calcular resultado da rodada
+                            apostas_rodada = [a for a in apostas_user if a['rodada'] == rodada]
+                            resultado_rodada = sum(a['valor_ganho'] - a['valor_apostado'] for a in apostas_rodada)
+                            saldo_atual += resultado_rodada
+                            dados_saldo_user.append(saldo_atual)
+                        
+                        # Separar usuário selecionado dos outros
+                        nome_usuario = usuario['nome']
+                        if usuario['id'] == usuario_selecionado_id:
+                            dados_usuario_selecionado[nome_usuario] = dados_saldo_user
+                        else:
+                            dados_todos_usuarios[nome_usuario] = dados_saldo_user
                     
-                    df_saldo_evolucao = pd.DataFrame(dados_saldo).set_index('Rodada')
-                    st.line_chart(df_saldo_evolucao, color="#2ca02c")
+                    # Criar gráfico com plotly
+                    fig = go.Figure()
+                    
+                    # Primeiro adicionar as linhas cinzas (outros usuários)
+                    for nome_usuario, dados_saldo in dados_todos_usuarios.items():
+                        fig.add_trace(go.Scatter(
+                            x=rodadas_para_grafico,
+                            y=dados_saldo,
+                            mode='lines',
+                            name=nome_usuario,
+                            line=dict(color='rgba(192, 192, 192, 0.5)', width=1),
+                            showlegend=False,
+                            hovertemplate=f'<b>{nome_usuario}</b><br>Rodada: %{{x}}<br>Saldo: R$ %{{y:.2f}}<extra></extra>'
+                        ))
+                    
+                    # Depois adicionar a linha verde do usuário selecionado (por cima)
+                    usuario_selecionado_nome = next(u['nome'] for u in st.session_state.usuarios if u['id'] == usuario_selecionado_id)
+                    if dados_usuario_selecionado:
+                        for nome_usuario, dados_saldo in dados_usuario_selecionado.items():
+                            fig.add_trace(go.Scatter(
+                                x=rodadas_para_grafico,
+                                y=dados_saldo,
+                                mode='lines',
+                                name=f'{nome_usuario} (Selecionado)',
+                                line=dict(color='#2ca02c', width=3),
+                                showlegend=False,
+                                hovertemplate=f'<b>{nome_usuario} (Selecionado)</b><br>Rodada: %{{x}}<br>Saldo: R$ %{{y:.2f}}<extra></extra>'
+                            ))
+                    
+                    # Adicionar linha horizontal do saldo inicial
+                    fig.add_hline(y=saldo_inicial_ref, line_dash="dash", line_color="green", 
+                                 opacity=0.5, annotation_text=f"Saldo Inicial (R$ {saldo_inicial_ref:.2f})")
+                    
+                    # Configurar layout
+                    fig.update_layout(
+                        title="Evolução do Saldo - Todos os Usuários",
+                        xaxis_title="Rodada",
+                        yaxis_title="Saldo (R$)", 
+                        showlegend=False,
+                        height=500
+                    )
+                    
+                    # Mostrar gráfico
+                    st.plotly_chart(fig, use_container_width=True)
+                    
             else:
                 st.write(f"{usuario_selecionado['nome']} ainda não fez nenhuma aposta.")
     else:
