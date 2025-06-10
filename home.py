@@ -175,23 +175,23 @@ with st.expander("🎲 Distribuições de Probabilidade Utilizadas", expanded=Fa
     Principais distribuições que moldam a simulação:
 
     -   **Resultados dos Jogos (Futebol):**
-        *   Prob. Vitória: $ P({Vitória}) \sim Uniforme(0.05, 0.70) $
-        *   Prob. Empate: $ P({Empate}) \sim Uniforme(0.10, 0.25) $
-        *   Prob. Derrota: $ P({Derrota}) = 1 - P({Vitória}) - P({Empate}) $
+        *   $ Vitória \sim Uniforme(0.05, 0.70) $
+        *   $ Empate \sim Uniforme(0.10, 0.25) $
+        *   $ P(Derrota) = 1 - P({Vitória}) - P({Empate}) $
 
     -   **Decisão de Apostar na Rodada (por Usuário):**
-        *   Modelo: Bernoulli $ X \sim {Bernoulli}(p) $
-        *   Parâmetro $p$: Probabilidade de Decidir Apostar (do perfil).
+        *   Modelo: Bernoulli $ X \sim {Bernoulli}(p) $, em que $p$ é a probabilidade de decidir apostar (do perfil).
 
     -   **Quantidade de Apostas (se usuário aposta):**
-        *   Modelo: Poisson Truncada em 1 ($ K \ge 1 $).
+        *   Modelo: Poisson Truncada em 1  
         *   Parâmetro $ \lambda $: Média de Apostas Desejadas (do perfil), $ Y \sim {Pois}(\lambda) $.
 
     -   **Escolha do Jogo e Resultado para Apostar:**
         *   Modelo: Uniforme discreta sobre as opções disponíveis.
 
     -   **Simulação do Resultado Final de um Jogo:**
-        *   Modelo: Categórica, com probabilidades $ \mathbf{p} = [P({Vitória}), P({Empate}), P({Derrota})] $ reais do jogo.
+                
+        *   Modelo: Discreto, com probabilidades $P({Vitória}), P({Empate}), P({Derrota})$ reais do jogo.
     """)
 
 # Expander 4: O que explorar
@@ -215,7 +215,7 @@ st.markdown("""
             <strong>Instagram:</strong> <a href="https://instagram.com/ricardorocha.86" target="_blank">instagram.com/ricardorocha.86</a><br>
             <strong>LinkedIn:</strong> <a href="https://linkedin.com/in/ricardorocha86" target="_blank">linkedin.com/in/ricardorocha86</a><br>
             <strong>GitHub:</strong> <a href="https://github.com/ricardorocha86" target="_blank">github.com/ricardorocha86</a><br>
-            <strong>Streamlit Apps:</strong> <a href="https://share.streamlit.io/user/ricardorocha86" target="_blank">share.streamlit.io/user/ricardorocha86</a>
+            <strong>Streamlit:</strong> <a href="https://share.streamlit.io/user/ricardorocha86" target="_blank">share.streamlit.io/user/ricardorocha86</a>
         </p>
     </div>
 </div>

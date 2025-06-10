@@ -451,6 +451,7 @@ if not st.session_state.simulacao_iniciada:
     if not pode_continuar:
         st.error("Existem erros de configuração nos Perfis de Apostador na barra lateral. Ajuste-os para continuar.")
 else:
+    st.title("🎲 Simulador Principal: Os números 'ocultos' da casa de apostas! ")
     st.header(f"📊 Resultados da Rodada: {st.session_state.rodada_atual}")
     
     if st.session_state.historico_casa:
