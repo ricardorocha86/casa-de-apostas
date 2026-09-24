@@ -81,12 +81,6 @@ st.markdown("""
         margin-top: 20px;
         margin-bottom: 20px;
     }
-    /* Style for expander headers to make them more prominent */
-    .st-expanderHeader {
-        font-size: 1.1em;
-        font-weight: bold;
-        color: #28a745; /* Bootstrap success green */
-    }
     .footer {
         margin-top: 50px;
         padding-top: 20px;
@@ -145,9 +139,19 @@ st.markdown("""
     - Veja como a margem da casa e os diferentes perfis de apostadores afetam a lucratividade e a sustentabilidade do sistema! 🏦⚽️🤑
     """)   
 
-# Final Info (Visible)
-# st.markdown("---") # Removido para não ter duas linhas separadoras
-st.success("Para começar, navegue até a página **Simulador Principal** no menu lateral e configure sua primeira simulação.")
+# Roteiro sugerido
+st.markdown('<p class="custom-subheader">🧭 Por onde começar?</p>', unsafe_allow_html=True)
+roteiro_col1, roteiro_col2 = st.columns(2)
+with roteiro_col1:
+    with st.container(border=True):
+        st.markdown("**1º passo — Entenda as odds**")
+        st.caption("Veja como probabilidade e margem da casa viram a odd oferecida, e quanto você perde em média por aposta.")
+        st.page_link("calculadora_odds.py", label="Abrir a Calculadora de Odds", icon="📚")
+with roteiro_col2:
+    with st.container(border=True):
+        st.markdown("**2º passo — Veja a casa funcionando**")
+        st.caption("Simule centenas de apostadores rodada a rodada e acompanhe o \"lucro\" da casa e o saldo de cada um.")
+        st.page_link("sim1.py", label="Abrir o Simulador Principal", icon="👩🏽‍💻")
 
 
 # Expander 2: Algoritmo (Resumido)
@@ -162,7 +166,7 @@ with st.expander("📜 Entenda o Algoritmo da Simulação", expanded=False):
         *   **Número de Apostas:** Quantidade de apostas definida (Poisson Truncada ≥ 1).
         *   **Execução das Apostas:** Para cada aposta:
             *   Valor: 10% do saldo (respeitando aposta mínima).
-            *   Escolha: Jogo e resultado aleatórios.
+            *   Escolha: Jogo sorteado ao acaso; o resultado é sorteado entre as odds mais baixas (Conservador), todas (Moderado) ou as mais altas (Arriscado).
             *   Registro: Saldo debitado, estatísticas atualizadas.
     4.  **Determinação dos Resultados:** Resultados finais dos jogos são simulados.
     5.  **Liquidação de Apostas:** Apostas vencedoras são pagas, saldos de usuários e estatísticas da casa atualizados.
@@ -171,34 +175,34 @@ with st.expander("📜 Entenda o Algoritmo da Simulação", expanded=False):
 
 # Expander 3: Distribuições (Resumido e Focado)
 with st.expander("🎲 Distribuições de Probabilidade Utilizadas", expanded=False):
-    st.markdown("""
+    st.markdown(r"""
     Principais distribuições que moldam a simulação:
 
     -   **Resultados dos Jogos (Futebol):**
-        *   $ Vitória \sim Uniforme(0.05, 0.70) $
-        *   $ Empate \sim Uniforme(0.10, 0.25) $
-        *   $ P(Derrota) = 1 - P({Vitória}) - P({Empate}) $
+        *   $P(\text{Vitória}) \sim \text{Uniforme}(0.05,\ 0.70)$
+        *   $P(\text{Empate}) \sim \text{Uniforme}(0.10,\ 0.25)$
+        *   $P(\text{Derrota}) = 1 - P(\text{Vitória}) - P(\text{Empate})$
 
     -   **Decisão de Apostar na Rodada (por Usuário):**
-        *   Modelo: Bernoulli $ X \sim {Bernoulli}(p) $, em que $p$ é a probabilidade de decidir apostar (do perfil).
+        *   Modelo: Bernoulli $X \sim \text{Bernoulli}(p)$, em que $p$ é a probabilidade de decidir apostar (do perfil).
 
     -   **Quantidade de Apostas (se usuário aposta):**
-        *   Modelo: Poisson Truncada em 1  
-        *   Parâmetro $ \lambda $: Média de Apostas Desejadas (do perfil), $ Y \sim {Pois}(\lambda) $.
+        *   Modelo: Poisson Truncada em 1
+        *   Parâmetro $\lambda$: Média de Apostas Desejadas (do perfil), $Y \sim \text{Pois}(\lambda)$.
 
     -   **Escolha do Jogo e Resultado para Apostar:**
-        *   Modelo: Uniforme discreta sobre as opções disponíveis.
+        *   Jogo: Uniforme discreta entre os jogos da rodada.
+        *   Resultado: Uniforme discreta, com as opções definidas pelo perfil — **Conservador** sorteia entre a menor odd e a intermediária, **Moderado** entre os três resultados e **Arriscado** entre a intermediária e a maior odd.
 
     -   **Simulação do Resultado Final de um Jogo:**
-                
-        *   Modelo: Discreto, com probabilidades $P({Vitória}), P({Empate}), P({Derrota})$ reais do jogo.
+        *   Modelo: Discreto, com probabilidades $P(\text{Vitória}), P(\text{Empate}), P(\text{Derrota})$ reais do jogo.
     """)
 
 # Expander 4: O que explorar
 with st.expander("🚀 Explore as Possibilidades!", expanded=False):
     st.markdown("""
     -   **Ajustar Parâmetros:** Na barra lateral da página de simulação (`Simulador Principal`), você pode definir o número de usuários, saldo inicial, margem da casa e configurar detalhadamente o comportamento de cada perfil de apostador.
-    -   **Avançar Rodadas:** Acompanhe a evolução do sistema rodada a rodada.
+    -   **Avançar Rodadas:** Acompanhe a evolução do sistema rodada a rodada, ou avance 10 rodadas de uma vez.
     -   **Analisar Resultados:** Observe métricas como faturamento, lucro da casa, número de apostas, saldo médio dos usuários, e muito mais.
     
     **Divirta-se explorando e aprendendo!**

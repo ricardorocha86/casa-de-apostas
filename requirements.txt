@@ -2,5 +2,4 @@ streamlit==1.44.1
 pandas
 numpy
 faker
-matplotlib
 plotly

@@ -1,10 +1,6 @@
 import streamlit as st
-import numpy as np
-import pandas as pd
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-import math
+
+from formatacao import brl_md, pct
 
 
 # Estilo personalizado
@@ -82,7 +78,7 @@ st.markdown("---")
 # === SEÇÃO 1: CONCEITOS BÁSICOS ===
 st.header("📖 Conceitos Fundamentais")
 
-st.markdown("""
+st.markdown(r"""
 As apostas esportivas envolvem três conceitos matemáticos interligados que determinam quanto você pode ganhar ou perder.
 
 **Probabilidade** é a quantificação da incerteza de um evento acontecer, expressa entre 0 e 1 (ou 0% a 100%).
@@ -116,6 +112,9 @@ with st.sidebar:
     st.subheader("🏠 Margem da Casa")
     margem_casa = st.slider("Margem da Casa (%)", 0.0, 25.0, 5.0, 0.5) / 100
 
+    st.subheader("💵 Sua Aposta")
+    valor_aposta = st.number_input("Valor Apostado (R$)", min_value=1.0, max_value=100000.0, value=100.0, step=10.0)
+
 # Inputs na página principal
 st.subheader("🏆 Probabilidades Reais")
 col1, col2, col3 = st.columns(3)
@@ -135,11 +134,7 @@ prob_derrota = 1.0 - prob_vitoria - prob_empate
 if prob_derrota < 0:
     prob_derrota = 0
     prob_empate = 1.0 - prob_vitoria
-
-# Validação
-total_prob = prob_vitoria + prob_empate + prob_derrota
-if abs(total_prob - 1.0) > 0.001:
-    st.warning("⚠️ As probabilidades devem somar 100%!")
+    st.warning(f"⚠️ Vitória + Empate passavam de 100%. O Empate foi ajustado para {pct(prob_empate * 100)} e a Derrota ficou em 0%.")
 
 # Calcular odds
 odds_justas = [1/prob_vitoria if prob_vitoria > 0 else 999, 
@@ -163,7 +158,7 @@ for i, (col, resultado, prob, cor) in enumerate(zip([col1, col2, col3], resultad
         st.markdown(f"""
         <div style="background-color: {cor}; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px;">
             <h3>{resultado}</h3>
-            <h4>{prob:.1%}</h4>
+            <h4>{pct(prob * 100)}</h4>
         </div>
         """, unsafe_allow_html=True)
         
@@ -174,7 +169,13 @@ for i, (col, resultado, prob, cor) in enumerate(zip([col1, col2, col3], resultad
         with subcol2:
             st.metric("Odd Final", f"{odds_com_margem[i]:.2f}", border=True)
         with subcol3:
-            st.metric("Retorno Esperado", f"{retornos_esperados[i]:.1%}", border=True)
+            st.metric("Retorno Esperado", pct(retornos_esperados[i] * 100), border=True)
+
+        if prob > 0:
+            st.caption(
+                f"Apostando {brl_md(valor_aposta)}: recebe **{brl_md(valor_aposta * odds_com_margem[i])}** se acertar. "
+                f"Perda esperada: **{brl_md(-retornos_esperados[i] * valor_aposta)}** por aposta."
+            )
 
 # === SEÇÃO 3: DICAS E CONCLUSÕES ===
 st.markdown("---")
